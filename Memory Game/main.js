@@ -95,14 +95,21 @@ function shuffle(array) {
 console.log(cardArray);
 
 const gridDisplay=document.getElementById("grid");
+const resultDisplay=document.getElementById("score");
+
 let cardsChosen=[];
+let cardsChosenID=[];
+let cardsWon=[];
 
 //Genera el tablero
 function createBoard(){
 
+    //Construímos el tablero
     for(let i=0; i<cardArray.length; i++){
+        //LLenamos el grid con el array de imágenes
         const card=document.createElement("img");
         card.setAttribute("src","images/blank.png");
+        //Le asignamos un ID y un escuchador de ventos
         card.setAttribute("data-id",i);
         card.addEventListener("click",flipCard);
         console.log(card)
@@ -113,14 +120,68 @@ function createBoard(){
 
 createBoard();
 
+/**
+ * Chequea si se ha encontrado una pareja
+ */
+function checkMatch(){
+    //obtiene las imágenes del tablero
+    const cards=document.querySelectorAll("#grid img");
+    //elementos seleccionados por el usuario
+    let optionSelected1=cardsChosenID[0];
+    let optionSelected2=cardsChosenID[1];
+
+    //si hay una pareja, cambiamos la imagen y anulamos el escuchador de eventos
+    if(cardsChosen[0] === cardsChosen[1]){
+        cards[optionSelected1].setAttribute("src","./images/white.png");
+        cards[optionSelected1].removeEventListener("click", flipCard);
+
+        cards[optionSelected2].setAttribute("src","./images/white.png");
+        cards[optionSelected2].removeEventListener("click", flipCard);
+
+        //almacenamos la pareja ganadora
+        cardsWon.push(cardsChosen);
+
+        resultDisplay.innerHTML=cardsWon.length;
+        
+        alert("¡Enhorabuena! 'Has encontrado una pareja!");
+
+    }else{
+        cards[optionSelected1].setAttribute("src","./images/blank.png");
+        cards[optionSelected2].setAttribute("src","./images/blank.png");
+
+        alert("¡Lo siento! 'Vuelve a intentarlo otra vez!");
+    }
+
+    if(cardsWon.length === cardArray.length/2){
+       // alert("¡Enhorabuena! ¡Has completado todas las parejas!");
+        resultDisplay.innerHTML="¡Enhorabuena! ¡Has completado todas las parejas!";
+    }
+
+    cardsChosen=[];
+    cardsChosenID=[];
+
+}
+
 function flipCard(){
     const cardID=this.getAttribute("data-id");
     //console.log("clicked",cardID)
     //console.log(cardArray[cardID].name)
-    cardsChosen.push(cardArray[cardID].name);
     this.setAttribute("src",cardArray[cardID].image);
+
+   // console.log(cardArray[cardID].name);
+
+    cardsChosen.push(cardArray[cardID].name);
+    cardsChosenID.push(cardID);
+    
+    if(cardsChosen.length === 2){
+        //console.log(cardsChosen[0])
+       // console.log(cardsChosen[1])
+        setTimeout(checkMatch, 500);
+    }
   
 }
+
+
 
 
 
