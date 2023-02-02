@@ -149,7 +149,7 @@ function checkMatch(){
         cards[optionSelected1].setAttribute("src","./images/blank.png");
         cards[optionSelected2].setAttribute("src","./images/blank.png");
 
-        alert("¡Lo siento! 'Vuelve a intentarlo otra vez!");
+       
     }
 
     if(cardsWon.length === cardArray.length/2){
